@@ -1,7 +1,7 @@
 /*
    MyFocuer.ino
 
-   Copyright (c) 2018 Roman Hujer
+   Copyright (c) 2018 Roman Hujer   http://hujer.net
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,15 +16,25 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+ Description:
+   Focucer for OnStep controller and Sky-Watcher 150/750mm Telescope
+
+   Wiring and PCB on  https://easyeda.com/hujer.roman/myfocuser-for-onstep
+
+   More info about OnStep Controller on https://groups.io/g/onstep/wiki/home
+ 
+
 */
 
-
 #define Product "MyFocuserForOnStep"
-#define Version "1.0"
+#define Version "1.0a"
 
 #include "Config.h"
 #include "Setup.h"
 
+#ifdef DEBUG_ON
+int LastModeSensorValue = 0;
+#endif
 
 void setup() {
 
@@ -58,54 +68,54 @@ void setup() {
 void loop() {
 
   ModeSensorValue = analogRead(mode_pin);
-  if OnStepMode(ModeSensorValue) {
+
 #ifdef DEBUG_ON
-    if (NowMode != NowOnStepMode) Serial.println("Now is OnStep Controll");
+  if (ModeSensorValue != LastModeSensorValue) {
+    LastModeSensorValue = ModeSensorValue
+                          Serial.print("Sensor value is :");
+    Serial.println(ModeSensorValue);
+  }
 #endif
+
+  if OnStepMode(ModeSensorValue) {
+
+#ifdef DEBUG_ON
+    if (NowMode != NowOnStepMode) Serial.println("OnStep Controll");
+#endif
+
     MyLED(ON);
     NowMode = NowOnStepMode;
   }
   else if StandbyMode(ModeSensorValue) {
+
 #ifdef DEBUG_ON
     if (NowMode != NowStandyMode)  Serial.println("Standy mode");
 #endif
+
     MyLED(OFF);
     NowMode = NowStandyMode;
-  } else if DownMode(ModeSensorValue) {
-#ifdef DEBUG_ON
-    if (NowMode != NowDownMode)  Serial.println("Down mode");
-#endif
-    NowMode = NowDownMode;
-    MyLEDblink();
-    
-    motor_step(0);
-   delay( ModeSensorValue/MinStepRate + MaxStepRate );
-   
+  } else if LeftMode(ModeSensorValue) {
 
-    
-  } else if UpMode(ModeSensorValue) {
 #ifdef DEBUG_ON
-    if (NowMode != NowUpMode)   Serial.println("Up mode");
+    if (NowMode != NowLeftMode)  Serial.println("Left mode");
 #endif
-    NowMode = NowUpMode;
-    MyLEDblink();
 
-    motor_step(1);
-    delay( abs(ModeSensorValue-1023)/MinStepRate + MaxStepRate );
-    
-        
+    NowMode = NowLeftMode;
+    MyLEDblink();
+    ManualControll( ModeSensorValue - SensorMin, LEFT);
+
+  } else if RightMode(ModeSensorValue) {
+
+#ifdef DEBUG_ON
+    if (NowMode != NoRightMode)   Serial.println("Right mode");
+#endif
+
+    NowMode = NowRightMode;
+    MyLEDblink();
+    ManualControll(abs(ModeSensorValue - SensorMax), RIGHT);
   }
 
 } // End of loop()
 
-
-// OnStepControll - Step/Dir Pins  Call in Interupt - Dir pin (2) chage LOW to HIGH
-//
-void OnStepControll() {
-  
-  
-  if OnStepMode( ModeSensorValue ) motor_step (digitalRead(dir_pin));
-  
-} // End of OnStepControll()
 
 

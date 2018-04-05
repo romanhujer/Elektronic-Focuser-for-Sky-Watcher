@@ -1,65 +1,76 @@
 // Setup.h
+// Hardware specific config for MyFocuser
+// 
+// Copyright (c) 2018 Roman Hujer   http://hujer.net
 //
-// Hardware specific config
-//
-// https://easyeda.com/hujer.roman/myfocuser-for-onstep
+// Wring and PCB on  https://easyeda.com/hujer.roman/myfocuser-for-onstep
 //
 //
 
-// Port Register for ULN2003 use ATMega168 Pins 10,11,12,13
+// Port Register for ULN2003 on ATMega168 use pins 10,11,12,13
 #define ULN2003DDR      DDRB       // Data Direction Register   
 #define ULN2003Port     PORTB      // Data Register
-#define ULN2003PortMask B00111100
-#define ULN2003FirstBit 2
+#define ULN2003PortMask B00111100  // Pins mask
+#define ULN2003FirstBit 2          // First pin bit
 
 #define step_pin 2  // Interupt from OnStep controll 
 #define dir_pin  9  // Direcition from OnSteo controll
 
 #define led_pin 3   // Status led pin
 
-#define mode_pin A1
+#define mode_pin A1  // Sensor (Poteciometr) Pin
 
-#define ON true
+// LED
+#define ON  true
 #define OFF false
 
-// Sensor mode Zone define
+// Motor Direction
+#define LEFT  false
+#define RIGHT true
 
-#define StepsDownL 0
-#define StepsDownH 480
+// Sensor Zone define
+#define SensorMin 0
+#define SensorCenter 512
+#define SensorMax 1023
 
-#define StandbyLL 471
-#define StandbyLH 491
+#define StepsLeftL 0
+#define StepsLeftR 470
+
+#define StandbyLL 474
+#define StandbyLR 490
 
 #define OnStepL  492
-#define OnStepH  532
+#define OnStepR  532
 
-#define StandbyRL 533
-#define StandbyRH 553
+#define StandbyRL 530
+#define StandbyRR 550
 
-#define StepsUpL 554
-#define StepsUpH 1023
+#define StepsRightL 554
+#define StepsRightR 1023
 
 
 boolean led_status = OFF;
-int8_t step_position = 0;
-long ModeSensorValue = 512;
+int step_position = 0;
+int ModeSensorValue = SensorCenter;
 byte NowMode = 0;
 
 #define  NowOnStepMode 1
 #define  NowStandyMode 2
-#define  NowDownMode   3
-#define  NowUpMode     4
+#define  NowLeftMode   3
+#define  NowRightMode  4
 
+// MACROS for Senzor zone select
+//
 // OnStep Mode
-#define OnStepMode(SensorValue) (((SensorValue) >= OnStepL) && ((SensorValue) <= OnStepH))
+#define OnStepMode(SensorValue) (((SensorValue) >= OnStepL) && ((SensorValue) <= OnStepR))
 
 // Standby Mode
-#define StandbyMode(SensorValue) ((((SensorValue) >= StandbyLL ) && ((SensorValue) <= StandbyLH)) || (((SensorValue) >= StandbyRL) && ((SensorValue) <= StandbyRH)))
+#define StandbyMode(SensorValue) ((((SensorValue) >= StandbyLL ) && ((SensorValue) <= StandbyLR)) || (((SensorValue) >= StandbyRL) && ((SensorValue) <= StandbyRR)))
 
-// Down Mode
-#define DownMode(SensorValue) (((SensorValue) >= StepsDownL) && ((SensorValue) <= StepsDownH))
+// Left Mode
+#define LeftMode(SensorValue) (((SensorValue) >= StepsLeftL) && ((SensorValue) <= StepsLeftR))
 
-// Up Mode
-#define UpMode(SensorValue) (((SensorValue) >= StepsUpL) && ((SensorValue) <= StepsUpH))
+// Right Mode
+#define RightMode(SensorValue) (((SensorValue) >= StepsRightL) && ((SensorValue) <= StepsRightR))
 
 

@@ -1,10 +1,15 @@
-// MyMotorDrive  
+// MyMotorDrive.ino  
+// Motor Driver for MyFocuser 
+//
+// Copyright (c) 2018 Roman Hujer   http://hujer.net
 //
 // Motor is 28BYJ-48 5V
+//
+// NOTE:
 // Motor rotation  64 steps
 // Gears ratio 64:1
 // Full rotation is 4096 steps
-// and ULN2003 chip
+// ULN2003 chip
 
 #ifndef REVERSE_DIR_ON
   #define REVERSE_DIR  false
