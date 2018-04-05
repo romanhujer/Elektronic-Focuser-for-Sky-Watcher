@@ -1,6 +1,6 @@
-# Elektronic-Focuser-for-Sky-Watcher
+# Elektronic Focuser for Sky-Watcher
 
- Focucer for OnStep controller and Sky-Watcher 150/750mm Telescope
+ Focucer for OnStep telescope controller and Sky-Watcher 150/750mm Telescope
   
   Wiring and PCB on  https://easyeda.com/hujer.roman/myfocuser-for-onstep
   
