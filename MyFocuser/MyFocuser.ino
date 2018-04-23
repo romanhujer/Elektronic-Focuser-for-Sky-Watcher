@@ -60,7 +60,7 @@ void setup() {
 
   // Init interrupt for OnStep controll
   ModeSensorValue = analogRead(mode_pin);
-  attachInterrupt(digitalPinToInterrupt(step_pin), OnStepControll, HIGH);
+  attachInterrupt(digitalPinToInterrupt(step_pin), OnStepControll,HIGH );
 
 } //End of setup()
 

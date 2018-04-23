@@ -26,14 +26,14 @@ void MyLEDblink( ) {
 // OnStepControll - Step/Dir Pins  Call in Interupt - Dir pin (2) chage LOW to HIGH
 //
 void OnStepControll() {
-  if OnStepMode( ModeSensorValue ) motor_step (!digitalRead(dir_pin));
+  if OnStepMode( ModeSensorValue ) motor_step (digitalRead(dir_pin));
 } // End of OnStepControll()
 
 
 // ManualControll
 void ManualControll( int Value, boolean Dir ) {
   motor_step(Dir);
-  delay( int(exp( Value/ManualSpeedCurve) ) );
+  delay( int(exp( Value/ManualSpeedCurve) ));
 } // End  of ManualControll()
 
 
