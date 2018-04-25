@@ -16,7 +16,11 @@
 #define step_pin 2  // Interupt from OnStep controll 
 #define dir_pin  9  // Direcition from OnSteo controll
 
-#define led_pin 3   // Status led pin
+#define led_pin 3       // Status led pin
+#define Mode1_pin 4     // Mode1 button pin 
+#define Mode2_pin 5     // Mode2 button pin 
+#define Limit_pin 6     // Limit pim  
+
 
 #define mode_pin A1  // Sensor (Poteciometr) Pin
 
@@ -37,15 +41,15 @@
 #define StepsLeftR 470
 
 #define StandbyLL 474
-#define StandbyLR 490
+#define StandbyLR 480
 
-#define OnStepL  492
+#define OnStepL  482
 #define OnStepR  532
 
 #define StandbyRL 530
-#define StandbyRR 550
+#define StandbyRR 560
 
-#define StepsRightL 554
+#define StepsRightL 564
 #define StepsRightR 1023
 
 
