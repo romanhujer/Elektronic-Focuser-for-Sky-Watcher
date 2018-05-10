@@ -12,3 +12,13 @@
 #define DEBUG_OFF          // Turn _ON is DEBUG mode default _OFF
 #define SERIAL_BAUD 115200 // Serial port bauts for DEBUG mode default 115200
 
+#define LED_DISPLAY_ON    // TM1637  LED Dispaly
+
+#define BUZZER_ON	   // Buzzer
+
+#define MODE_BUTTONS_OFF   // Mode buttons
+
+#define LIMIT_SESSOR_OFF   // Limit sersor for auto calibration
+
+
+#define StepsPerMicrometer  0.53  // Steps Per Micrometer 

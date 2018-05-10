@@ -34,10 +34,17 @@ void OnStepControll() {
 void ManualControll( int Value, boolean Dir ) {
   motor_step(Dir);
   delay( int(exp( Value/ManualSpeedCurve) ));
+ //delayMicroseconds( int(exp( Value/ManualSpeedCurve) )*10000);
 } // End  of ManualControll()
 
 
-
+#ifdef BUZZER_ON 
+void buzzer( int _long ) {
+  tone(BuzzerPin, BuzzerTone );
+  delay(_long);
+  noTone(BuzzerPin);
+} //
+#endif
 
 
 

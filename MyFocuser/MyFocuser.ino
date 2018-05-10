@@ -16,25 +16,31 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
- Description:
+  Description:
    Focucer for OnStep controller and Sky-Watcher 150/750mm Telescope
 
    Wiring and PCB on  https://easyeda.com/hujer.roman/myfocuser-for-onstep
 
    More info about OnStep Controller on https://groups.io/g/onstep/wiki/home
- 
+
 
 */
 
 #define Product "MyFocuserForOnStep"
-#define Version "1.0a"
+#define Version "1.0b"
 
 #include "Config.h"
 #include "Setup.h"
 
-#ifdef DEBUG_ON
-int LastModeSensorValue = 0;
+#ifdef LED_DISPLAY_ON
+#include <TM1637Display.h>  //https://github.com/avishorp/TM1637
+TM1637Display LedDisp(LedDispClk, LedDispDio);
 #endif
+
+int LastModeSensorValue = 0;
+long int CurrentStep = 0;
+long int LastDisp = 0;
+long int CurrentDisp = 0;
 
 void setup() {
 
@@ -48,68 +54,75 @@ void setup() {
 #endif
 
 
+
   pinMode(step_pin, INPUT_PULLUP);
   pinMode(dir_pin,  INPUT_PULLUP);
   pinMode(led_pin,  OUTPUT);
   pinMode(mode_pin, INPUT);
 
+#ifdef BUZZER_ON
+  pinMode(BuzzerPin, OUTPUT);
+#endif
   MotorInit();
 
   // Status LED init set to OFF
   MyLED(OFF);
 
+#ifdef LED_DISPLAY_ON
+  LedDisp.setBrightness(0x8);
+  LedDisp.showNumberDec(abs(CurrentDisp), true);
+#endif
   // Init interrupt for OnStep controll
   ModeSensorValue = analogRead(mode_pin);
-  attachInterrupt(digitalPinToInterrupt(step_pin), OnStepControll,HIGH );
+  attachInterrupt(digitalPinToInterrupt(step_pin), OnStepControll, HIGH );
 
 } //End of setup()
 
 
 void loop() {
 
+
+#ifdef LED_DISPLAY_ON
+  CurrentDisp = CurrentStep * StepsPerMicrometer / 10 ;
+  if  ( LastDisp !=  CurrentDisp) {
+    LastDisp =  CurrentDisp;
+    LedDisp.showNumberDec(abs(CurrentDisp), true);
+ }
+#endif
+
   ModeSensorValue = analogRead(mode_pin);
-
-#ifdef DEBUG_ON
-  if (ModeSensorValue != LastModeSensorValue) {
-    LastModeSensorValue = ModeSensorValue
-                          Serial.print("Sensor value is :");
-    Serial.println(ModeSensorValue);
-  }
-#endif
-
   if OnStepMode(ModeSensorValue) {
-
-#ifdef DEBUG_ON
-    if (NowMode != NowOnStepMode) Serial.println("OnStep Controll");
+    if (NowMode != NowOnStepMode) {
+#ifdef BUZZER_ON
+      buzzer(50);
+      delay(100);
+      buzzer(50);
 #endif
-
+    }
     MyLED(ON);
     NowMode = NowOnStepMode;
   }
   else if StandbyMode(ModeSensorValue) {
 
-#ifdef DEBUG_ON
-    if (NowMode != NowStandyMode)  Serial.println("Standy mode");
+#ifdef BUZZER_ON
+    tone(BuzzerPin, BuzzerTone );
 #endif
-
     MyLED(OFF);
     NowMode = NowStandyMode;
   } else if LeftMode(ModeSensorValue) {
 
-#ifdef DEBUG_ON
-    if (NowMode != NowLeftMode)  Serial.println("Left mode");
+#ifdef BUZZER_ON
+    noTone(BuzzerPin);
 #endif
-
     NowMode = NowLeftMode;
     MyLEDblink();
     ManualControll( ModeSensorValue - SensorMin, LEFT);
 
   } else if RightMode(ModeSensorValue) {
 
-#ifdef DEBUG_ON
-    if (NowMode != NoRightMode)   Serial.println("Right mode");
+#ifdef BUZZER_ON
+    noTone(BuzzerPin);
 #endif
-
     NowMode = NowRightMode;
     MyLEDblink();
     ManualControll(abs(ModeSensorValue - SensorMax), RIGHT);

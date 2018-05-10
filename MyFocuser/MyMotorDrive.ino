@@ -36,9 +36,11 @@ void SetULN2003( byte Step)
 void motor_step( boolean  direction ) {
   if ( direction ^ REVERSE_DIR ) {
     step_position++;
+    CurrentStep++;
   }
   else {
     step_position--;
+    CurrentStep--;
   }
   if (step_position < 0) step_position = 7;
   if (step_position > 7) step_position = 0;
