@@ -17,13 +17,13 @@
 #define dir_pin  9  // Direcition from OnSteo controll
 
 #define led_pin 3       // Status led pin
-#define Mode1_pin A5     // Mode1 button pin 
-#define Mode2_pin A6     // Mode2 button pin 
-#define Limit_pin A7     // Limit pin for auto calibration
+#define Mode1_pin 5     // Mode1 button pin 
+#define Mode2_pin 6     // Mode2 button pin 
+#define Limit_pin A6     // Limit pin for auto calibration
 
 
-#define LedDispClk 5	// TM1637 CLK
-#define LedDispDio 6	// TM1637 DIO 
+#define LedDispClk A5	// TM1637 CLK
+#define LedDispDio A4	// TM1637 DIO 
 
 #define BuzzerPin  4   // Buzzer Pin
 #define BuzzerTone 443  // Buzzer tone in Hz 
