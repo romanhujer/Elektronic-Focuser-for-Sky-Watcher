@@ -7,11 +7,17 @@
   More info about OnStep Controller on https://groups.io/g/onstep/wiki/home
 
 
-TODO LIST:
 
--	Add support for Buzzer
--	Add support for TM1637 LED display 
--	Add support for two mode buton
--	Add support for limit sernsor for auto calibration
+* MyFocuserFreeCad     -  FreeCAD and stl models for 3D printing
 
-	Cretate Nema17 version??	
+28BYJ-48 motor Vesion:
+
+* BasicOnStepControll  -  only Dir/Step controll for 28BYJ-48 motor
+* MyFocuserV1.0	       -  first version Potenciometr control and TM1637Display LED display	
+* MyFocuserV1.5	       -  Oled display and +/- button controll
+
+
+Nema17 motor Vesion:
+
+*  in future version 
+
