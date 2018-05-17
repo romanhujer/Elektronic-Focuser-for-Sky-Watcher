@@ -14,8 +14,8 @@ void MyLED ( boolean mode ) {
   }
 } //End Of MyLED()
 
-// MyLEDblink
-void MyLEDblink( ) {
+// MyLedChangeStatus
+void MyLedChangeStatus( ) {
   if (led_status) {
     MyLED(OFF);
   } else {
@@ -28,23 +28,13 @@ void MyLEDblink( ) {
 // OnStepControll - Step/Dir Pins  Call in Interupt - Dir pin (2) chage LOW to HIGH
 //
 void OnStepControll() {
+    MyLedChangeStatus();
     motor_step (digitalRead(dir_pin));
 } // End of OnStepControll()
 
 
 
-
-#ifdef OLD_MODE_ON
-// ManualControll
-void ManualControll( int Value, boolean Dir ) {
-  motor_step(Dir);
-  delay( int(exp( Value/ManualSpeedCurve) ));
-} // End  of ManualControll()
-#endif 
-
-
 //TIMER1  handle Interrupt at freq of 1kHz 
-
 ISR(TIMER1_COMPA_vect) {
 boolean left,  right;
 
@@ -55,11 +45,22 @@ boolean left,  right;
      NowMode = 0;
  }
  else if (left ) {
+  
    NowMode = 4;
-   motor_step(HIGH);
+   SpeedTimer -= CurrentSpeed;
+   if (SpeedTimer < 1) {
+     SpeedTimer = 205; 
+     MyLedChangeStatus();
+     motor_step(HIGH);
+   } 
  } else if ( right ) {
    NowMode = 3;
-   motor_step(LOW);
+   SpeedTimer -= CurrentSpeed;
+   if (SpeedTimer < 1) {
+     SpeedTimer = 205; 
+     MyLedChangeStatus();
+     motor_step(LOW);
+   } 
  }
 
 

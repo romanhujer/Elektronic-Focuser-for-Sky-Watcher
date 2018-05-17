@@ -34,8 +34,7 @@ void SetULN2003( byte Step)
 
 // Steper motor driver
 void motor_step( boolean  direction ) {
-  MyLEDblink();
-  if ( direction ^ REVERSE_DIR ) {
+   if ( direction ^ REVERSE_DIR ) {
     step_position++;
     CurrentStep++;
   }

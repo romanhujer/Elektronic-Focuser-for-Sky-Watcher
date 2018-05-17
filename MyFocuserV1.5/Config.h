@@ -19,9 +19,5 @@
 
 #define BUZZER_ON	   // Buzzer
 
-#define MODE_BUTTONS_OFF   // Mode buttons
-
-#define LIMIT_SESSOR_OFF   // Limit sersor for auto calibration
-
 
 #define StepsPerMicrometer  0.53  // Steps Per Micrometer 

@@ -27,7 +27,7 @@
 */
 
 #define Product "MyFocuserForOnStep"
-#define Version "1.0b"
+#define Version "1.5a"
 
 #include "Config.h"
 #include "Setup.h"
@@ -46,8 +46,12 @@ U8GLIB_SSD1306_128X64 OledDisp(U8G_I2C_OPT_NONE);
 
 int LastModeSensorValue = 0;
 long int CurrentStep = 0;
-long int LastDisp = 0;
+long int LastDisp = -1;
 long int CurrentDisp = 0;
+int CurrentSpeed = 0;
+int LastSpeed = -1;
+
+int SpeedTimer = 205;
 
 void setup() {
 
@@ -73,21 +77,21 @@ void setup() {
   pinMode(BuzzerPin, OUTPUT);
 #endif
 
-//set timer1 interrupt at 1kHz
-cli();//stop interrupts
-TCCR1A = 0;// set entire TCCR1A register to 0
-TCCR1B = 0;// same for TCCR1B
-TCNT1  = 0;//initialize counter value to 0
-// set timer count for 1khz increments
-OCR1A = 1999;// = (16*10^6) / (1000*8) - 1
-//had to use 16 bit timer1 for this bc 1999>255, but could switch to timers 0 or 2 with larger prescaler
-// turn on CTC mode
-TCCR1B |= (1 << WGM12);
-// Set CS11 bit for 8 prescaler
-TCCR1B |= (1 << CS11);  
-// enable timer compare interrupt
-TIMSK1 |= (1 << OCIE1A);
-sei();//allow interrupts
+  //set timer1 interrupt at 1kHz
+  cli();//stop interrupts
+  TCCR1A = 0;// set entire TCCR1A register to 0
+  TCCR1B = 0;// same for TCCR1B
+  TCNT1  = 0;//initialize counter value to 0
+  // set timer count for 1khz increments
+  OCR1A = 1999;// = (16*10^6) / (1000*8) - 1
+  //had to use 16 bit timer1 for this bc 1999>255, but could switch to timers 0 or 2 with larger prescaler
+  // turn on CTC mode
+  TCCR1B |= (1 << WGM12);
+  // Set CS11 bit for 8 prescaler
+  TCCR1B |= (1 << CS11);
+  // enable timer compare interrupt
+  TIMSK1 |= (1 << OCIE1A);
+  sei();//allow interrupts
 
   MotorInit();
 
@@ -100,26 +104,33 @@ sei();//allow interrupts
   do {
     OledDisp.setRot180();
     OledDisp.setFont(u8g_font_unifont);
-    OledDisp.setPrintPos(0, 10);
+    OledDisp.setPrintPos(5, 20);
+    OledDisp.print("W E L C O M E");
+    OledDisp.setPrintPos(0, 40);
     OledDisp.print("OnStep Focuser");
 
   } while ( OledDisp.nextPage() );
+  buzzer(500);
+  delay(2000);
 #endif
+
   // Init interrupt for OnStep controll
-//  ModeSensorValue = analogRead(mode_pin);
-  attachInterrupt(digitalPinToInterrupt(step_pin), OnStepControll,FALLING  );
+  //  ModeSensorValue = analogRead(mode_pin);
+  attachInterrupt(digitalPinToInterrupt(step_pin), OnStepControll, FALLING  );
 
 } //End of setup()
 
 
 void loop() {
 
+  CurrentSpeed = analogRead(mode_pin)/5+1;
 
 #ifdef OLED_DISPLAY_ON
-  CurrentDisp = CurrentStep * StepsPerMicrometer / 5 ;
-  if  ( LastDisp !=  CurrentDisp) {
-    LastDisp =  CurrentDisp;
-
+  //  CurrentDisp = CurrentStep * StepsPerMicrometer / 5 ;
+  CurrentDisp = CurrentStep ;
+  if  ( LastDisp !=  CurrentDisp  || LastSpeed != CurrentSpeed ) {
+    LastDisp  = CurrentDisp;
+    LastSpeed = CurrentSpeed;
     OledDisp.firstPage();
     do {
       OledDisp.setFont(u8g_font_unifont);
@@ -127,22 +138,21 @@ void loop() {
       if (NowMode == NowOnStepMode) {
         OledDisp.print("OnStep Mode");
       }
-      else if ( NowMode == NowStandyMode ){
+      else if ( NowMode == NowStandyMode ) {
         OledDisp.print("Standby Mode");
       }
       else  {
         OledDisp.print("Manual Mode");
       }
-      OledDisp.setPrintPos(40, 40);
+      OledDisp.setPrintPos(40, 30);
       OledDisp.print(CurrentDisp);
-
+      OledDisp.setPrintPos(40, 50);
+      OledDisp.print(CurrentSpeed);
     } while ( OledDisp.nextPage() );
-#
   }
 #endif
 
 
-//  ModeSensorValue = analogRead(mode_pin);
 
 
 } // End of loop()
