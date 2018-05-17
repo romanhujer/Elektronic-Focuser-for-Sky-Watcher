@@ -14,7 +14,7 @@
 
 * BasicOnStepControll  -  only Dir/Step controll for 28BYJ-48 motor
 * MyFocuserV1.0	       -  first version Potenciometr control and TM1637Display LED display	
-* MyFocuserV1.5	       -  Oled display and +/- button controll
+* MyFocuserV1.5	       -  now in development Oled display and +/- button controll ...
 
 
 Nema17 motor Vesion:
