@@ -5,7 +5,7 @@
 //
 
 
-#define ManualSpeedCurve  75.0 //  Corection speed curve in manual mode (try from 60 to 90) default 75.0 
+#define ManualSpeedCurve  90.0 //  Corection speed curve in manual mode (try from 60 to 90) default 75.0 
 #define REVERSE_DIR_OFF        // _ON  is reverse the direction of focuser movement default _OFF
 
 

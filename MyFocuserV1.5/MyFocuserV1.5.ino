@@ -51,19 +51,9 @@ long int CurrentDisp = 0;
 int CurrentSpeed = 0;
 int LastSpeed = -1;
 
-int SpeedTimer = 205;
+int SpeedTimer = 290;
 
 void setup() {
-
-#ifdef DEBUG_ON
-  Serial.begin(SERIAL_BAUD);
-  Serial.print(".");
-  delay(500);
-  Serial.println(".");
-  delay(500);
-  Serial.println("Debug mode ON ");
-#endif
-
 
   pinMode(step_pin, INPUT_PULLUP);
   pinMode(dir_pin,  INPUT_PULLUP);
@@ -104,9 +94,9 @@ void setup() {
   do {
     OledDisp.setRot180();
     OledDisp.setFont(u8g_font_unifont);
-    OledDisp.setPrintPos(5, 20);
+    OledDisp.setPrintPos(10, 20);
     OledDisp.print("W E L C O M E");
-    OledDisp.setPrintPos(0, 40);
+    OledDisp.setPrintPos(10, 40);
     OledDisp.print("OnStep Focuser");
 
   } while ( OledDisp.nextPage() );
@@ -123,8 +113,10 @@ void setup() {
 
 void loop() {
 
-  CurrentSpeed = analogRead(mode_pin)/5+1;
+//  CurrentSpeed = analogRead(mode_pin)/5+1;
 
+  CurrentSpeed =  int (exp( analogRead(mode_pin)/180.0)+ 0.5);
+ 
 #ifdef OLED_DISPLAY_ON
   //  CurrentDisp = CurrentStep * StepsPerMicrometer / 5 ;
   CurrentDisp = CurrentStep ;
@@ -135,19 +127,19 @@ void loop() {
     do {
       OledDisp.setFont(u8g_font_unifont);
       OledDisp.setPrintPos(10, 10);
-      if (NowMode == NowOnStepMode) {
+      if (NowMode == 2 ) {
         OledDisp.print("OnStep Mode");
       }
-      else if ( NowMode == NowStandyMode ) {
-        OledDisp.print("Standby Mode");
+      else if ( NowMode == 1 ) {
+        OledDisp.print("Manual Mode");
       }
       else  {
-        OledDisp.print("Manual Mode");
+        OledDisp.print("Init Mode");
       }
       OledDisp.setPrintPos(40, 30);
       OledDisp.print(CurrentDisp);
       OledDisp.setPrintPos(40, 50);
-      OledDisp.print(CurrentSpeed);
+      OledDisp.print( int( CurrentSpeed/294. *100. + 0.8));
     } while ( OledDisp.nextPage() );
   }
 #endif

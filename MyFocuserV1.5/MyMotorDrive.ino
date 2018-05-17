@@ -3,7 +3,7 @@
 //
 // Copyright (c) 2018 Roman Hujer   http://hujer.net
 //
-// Motor is 28BYJ-48 5V
+// Motor is 28BYJ-48 5V or 12V
 //
 // NOTE:
 // Motor rotation  64 steps

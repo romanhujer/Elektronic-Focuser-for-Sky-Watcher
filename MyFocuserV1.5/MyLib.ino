@@ -28,6 +28,7 @@ void MyLedChangeStatus( ) {
 // OnStepControll - Step/Dir Pins  Call in Interupt - Dir pin (2) chage LOW to HIGH
 //
 void OnStepControll() {
+    NowMode = 2;
     MyLedChangeStatus();
     motor_step (digitalRead(dir_pin));
 } // End of OnStepControll()
@@ -45,23 +46,22 @@ boolean left,  right;
      NowMode = 0;
  }
  else if (left ) {
-  
-   NowMode = 4;
+   NowMode = 1;
    SpeedTimer -= CurrentSpeed;
    if (SpeedTimer < 1) {
-     SpeedTimer = 205; 
+     SpeedTimer = 290; 
      MyLedChangeStatus();
      motor_step(HIGH);
    } 
  } else if ( right ) {
-   NowMode = 3;
+   NowMode = 1;
    SpeedTimer -= CurrentSpeed;
    if (SpeedTimer < 1) {
-     SpeedTimer = 205; 
+     SpeedTimer = 290; 
      MyLedChangeStatus();
      motor_step(LOW);
    } 
- }
+ } 
 
 
 }  // end of ISR  for TIMER1
