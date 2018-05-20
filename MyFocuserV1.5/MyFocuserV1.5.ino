@@ -113,9 +113,9 @@ void setup() {
 
 void loop() {
 
-//  CurrentSpeed = analogRead(mode_pin)/5+1;
+ // CurrentSpeed = analogRead(mode_pin)/5+1;
 
-  CurrentSpeed =  int (exp( analogRead(mode_pin)/180.0)+ 0.5);
+ CurrentSpeed =  int (exp( analogRead(mode_pin)/180.0)+ 0.5);
  
 #ifdef OLED_DISPLAY_ON
   //  CurrentDisp = CurrentStep * StepsPerMicrometer / 5 ;

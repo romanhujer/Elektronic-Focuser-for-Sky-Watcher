@@ -17,8 +17,8 @@
 #define dir_pin  9  // Direcition from OnSteo controll
 
 #define led_pin 3       // Status led pin
-#define left_mode_pin 5     // UP Mode button pin 
-#define right_mode_pin 6   // DOWN Mode button pin 
+#define left_mode_pin 6     // UP Mode button pin 
+#define right_mode_pin 5 // DOWN Mode button pin 
 
 #define LedDispClk A5	// CLK  (SCL)
 #define LedDispDio A4	// DIO  (SDA)
