@@ -39,7 +39,7 @@
 boolean led_status = OFF;
 int step_position = 0;
 
-byte NowMode = 0;
+byte NowMode = 1;
 
 #define  NowInitMode 0
 #define  NowOnStepMode 1

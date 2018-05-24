@@ -32,6 +32,18 @@
 #include "Config.h"
 #include "Setup.h"
 
+int LastModeSensorValue = 0;
+long int CurrentStep = 0;
+long int LastDisp = -1;
+long int CurrentDisp = 0;
+int CurrentSpeed = 0;
+int LastSpeed = -1;
+int SpeedTimer = 290;
+int LongInit = 0;
+
+
+//#include "MyMotorDrive.h"
+//#include "MyLib.h"
 
 #ifdef LED_DISPLAY_ON
 #include <TM1637Display.h>  //https://github.com/avishorp/TM1637
@@ -44,14 +56,7 @@ U8GLIB_SSD1306_128X64 OledDisp(U8G_I2C_OPT_NONE);
 #endif
 
 
-int LastModeSensorValue = 0;
-long int CurrentStep = 0;
-long int LastDisp = -1;
-long int CurrentDisp = 0;
-int CurrentSpeed = 0;
-int LastSpeed = -1;
 
-int SpeedTimer = 290;
 
 void setup() {
 
@@ -68,12 +73,12 @@ void setup() {
 #endif
 
   //set timer1 interrupt at 1kHz
-  cli();//stop interrupts
-  TCCR1A = 0;// set entire TCCR1A register to 0
-  TCCR1B = 0;// same for TCCR1B
-  TCNT1  = 0;//initialize counter value to 0
+  cli();             //stop interrupts
+  TCCR1A = 0;        // set entire TCCR1A register to 0
+  TCCR1B = 0;        // same for TCCR1B
+  TCNT1  = 0;        //initialize counter value to 0
   // set timer count for 1khz increments
-  OCR1A = 1999;// = (16*10^6) / (1000*8) - 1
+  OCR1A = 1999;      // = (16*10^6) / (1000*8) - 1
   //had to use 16 bit timer1 for this bc 1999>255, but could switch to timers 0 or 2 with larger prescaler
   // turn on CTC mode
   TCCR1B |= (1 << WGM12);
@@ -136,10 +141,20 @@ void loop() {
       else  {
         OledDisp.print("Init Mode");
       }
-      OledDisp.setPrintPos(40, 30);
+      
+      OledDisp.setPrintPos(1, 30);
+      OledDisp.print("P:");
+      OledDisp.setPrintPos(20, 30);
       OledDisp.print(CurrentDisp);
-      OledDisp.setPrintPos(40, 50);
-      OledDisp.print( int( CurrentSpeed/294. *100. + 0.8));
+      OledDisp.print("/");
+      OledDisp.print(CurrentDisp*Step_um/1000.);
+      OledDisp.print("mm");
+      if ( NowMode == 1 ) {
+        OledDisp.setPrintPos(1, 50);
+        OledDisp.print("Speed:");
+        OledDisp.setPrintPos(50, 50);
+        OledDisp.print( int( CurrentSpeed/294. *100. + 0.8));
+      }
     } while ( OledDisp.nextPage() );
   }
 #endif

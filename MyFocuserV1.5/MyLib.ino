@@ -42,10 +42,18 @@ boolean left,  right;
  left  = !digitalRead(left_mode_pin);
  right = !digitalRead(right_mode_pin);
 
- if ( left &&  right) {
-     NowMode = 0;
+ if ( left && right) {
+     NowMode  = 0;
+     CurrentStep = 0;
+     LongInit++; 
+     if ( LongInit > 2000 ){
+        LongInit=2000; 
+        MyLedChangeStatus();
+        motor_step(LOW);
+     }
  }
  else if (left ) {
+   LongInit = 0;
    NowMode = 1;
    SpeedTimer -= CurrentSpeed;
    if (SpeedTimer < 1) {
@@ -54,6 +62,7 @@ boolean left,  right;
      motor_step(HIGH);
    } 
  } else if ( right ) {
+   LongInit = 0;
    NowMode = 1;
    SpeedTimer -= CurrentSpeed;
    if (SpeedTimer < 1) {
@@ -61,9 +70,7 @@ boolean left,  right;
      MyLedChangeStatus();
      motor_step(LOW);
    } 
- } 
-
-
+ }
 }  // end of ISR  for TIMER1
 
 
