@@ -2,22 +2,25 @@
 
  Focucer for OnStep telescope controller and Sky-Watcher 150/750mm Telescope
   
-  Wiring and PCB on  https://easyeda.com/hujer.roman/myfocuser-for-onstep
   
   More info about OnStep Controller on https://groups.io/g/onstep/wiki/home
 
 
-
 * MyFocuserFreeCad     -  FreeCAD and stl models for 3D printing
 
-28BYJ-48 motor Vesion:
+## 28BYJ-48 motor Vesion:
 
-* BasicOnStepControll  -  only Dir/Step controll for 28BYJ-48 motor
-* MyFocuserV1.0	       -  first version Potenciometr control and TM1637Display LED display	
-* MyFocuserV1.5	       -  now in development Oled display and +/- button controll ...
+  Wiring diagram and PCB on [EasyEDA](https://easyeda.com/hujer.roman/myfocuser-for-onstep)
 
+Adruino software:
 
-Nema17 motor Vesion:
+* BasicOnStepControll  -  Only Dir/Step controll for 28BYJ-48 motor
+* MyFocuserV1.0	       -  First version only Potenciometr control 
+* MyFocuserV1.5	       -  Oled display and +/- button controll
 
-*  in future version 
+  
+## Nema17 motor Vesion:
+
+  Wiring diagram and PCB on [EasyEDA](https://easyeda.com/hujer.roman/Focuser-with-NEMA17)
+
 
