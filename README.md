@@ -11,15 +11,15 @@
 * MyFocuserFreeCad     -  FreeCAD and stl models for 3D printing
 
 28BYJ-48 motor Vesion:
+  Wiring diagram and PCB on [EasyEDA](https://easyeda.com/hujer.roman/myfocuser-for-onstep)
 
-* BasicOnStepControll  -  only Dir/Step controll for 28BYJ-48 motor
-* MyFocuserV1.0	       -  first version Potenciometr control and TM1637Display LED display	
-* MyFocuserV1.5	       -  now in development Oled display and +/- button controll ...
+Adruino software:
+* BasicOnStepControll  -  Only Dir/Step controll for 28BYJ-48 motor
+* MyFocuserV1.0	       -  First version only Potenciometr control 
+* MyFocuserV1.5	       -  Oled display and +/- button controll
 
-  Wiring diagram and PCB on [EasyEDA](https://easyeda.com/account/project?project=c1a5860b1e724159b6e9053b114477d8)
-
+  
 Nema17 motor Vesion:
-
-  Wiring diagram and PCB on [EasyEDA](https://easyeda.com/account/project?project=afcad9faa8014411ac9b37168104e8ad)
+  Wiring diagram and PCB on [EasyEDA](https://easyeda.com/hujer.roman/Focuser-with-NEMA17)
 
 
