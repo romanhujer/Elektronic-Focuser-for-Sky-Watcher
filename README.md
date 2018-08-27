@@ -16,8 +16,10 @@
 * MyFocuserV1.0	       -  first version Potenciometr control and TM1637Display LED display	
 * MyFocuserV1.5	       -  now in development Oled display and +/- button controll ...
 
+  Wiring diagram and PCB on EasyEDA  https://easyeda.com/account/project?project=c1a5860b1e724159b6e9053b114477d8
 
 Nema17 motor Vesion:
 
-*  in future version 
+ Wiring diagram and PCB on EasyEDA  https://easyeda.com/account/project?project=afcad9faa8014411ac9b37168104e8ad
+
 
