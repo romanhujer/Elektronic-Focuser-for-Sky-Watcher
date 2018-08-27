@@ -8,7 +8,7 @@
 
 * MyFocuserFreeCad     -  FreeCAD and stl models for 3D printing
 
-##28BYJ-48 motor Vesion:
+## 28BYJ-48 motor Vesion:
 
   Wiring diagram and PCB on [EasyEDA](https://easyeda.com/hujer.roman/myfocuser-for-onstep)
 
@@ -19,7 +19,7 @@ Adruino software:
 * MyFocuserV1.5	       -  Oled display and +/- button controll
 
   
-##Nema17 motor Vesion:
+## Nema17 motor Vesion:
 
   Wiring diagram and PCB on [EasyEDA](https://easyeda.com/hujer.roman/Focuser-with-NEMA17)
 
