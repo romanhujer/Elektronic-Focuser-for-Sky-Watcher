@@ -26,7 +26,6 @@
 
 */
 
-#define Product "MyFocuserForOnStep"
 #define Version "2.0"
 
 #include "Config.h"
@@ -38,15 +37,12 @@ long int LastDisp = -1;
 long int CurrentDisp = 0;
 int CurrentSpeed = 0;
 int LastSpeed = -1;
-int SpeedTimer = 290;
+int SpeedTimer = 256;
 int LongInit = 0;
 
 
-//#include "MyMotorDrive.h"
-//#include "MyLib.h"
-
 #ifdef LED_DISPLAY_ON
-#include <TM1637Display.h>  //https://github.com/avishorp/TM1637
+#include <TM1637Display.h>  //  https://github.com/avishorp/TM1637
 TM1637Display LedDisp(LedDispClk, LedDispDio);
 #endif
 
@@ -54,8 +50,6 @@ TM1637Display LedDisp(LedDispClk, LedDispDio);
 #include <U8glib.h>
 U8GLIB_SSD1306_128X64 OledDisp(U8G_I2C_OPT_NONE);
 #endif
-
-
 
 
 void setup() {
@@ -92,22 +86,16 @@ void setup() {
   // enable timer compare interrupt
   TIMSK1 |= (1 << OCIE1A);
   sei();//allow interrupts
-
- 
   // Status LED init set to OFF
   MyLED(OFF);
 
 #ifdef OLED_DISPLAY_ON
-  OledDisp.setRot180();
-  OledDisp.firstPage();
-  do {
-    OledDisp.setRot180();
-    OledDisp.setFont(u8g_font_unifont);
-    OledDisp.setPrintPos(10, 20);
-    OledDisp.print("W E L C O M E");
-    OledDisp.setPrintPos(10, 40);
-    OledDisp.print("OnStep Focuser");
-
+   OledDisp.setRot180();
+   OledDisp.firstPage();
+   do {
+      OledDisp.setFont(u8g_font_unifont);
+      OledDisp.setPrintPos(2, 40);
+      OledDisp.print("Focuser ready!");
   } while ( OledDisp.nextPage() );
   buzzer(500);
   delay(2000);
@@ -123,49 +111,58 @@ void setup() {
 
 
 void loop() {
+#if defined(__AVR_ATmega168__) ||defined(__AVR_ATmega168P__)
+   int x = analogRead(mode_pin);
+   if ( x > 100 && x < 200 ) CurrentSpeed = 2;
+   else if (x > 200 && x < 300) CurrentSpeed = 4;
+   else if (x > 300 && x < 400) CurrentSpeed = 8;
+   else if (x > 400 && x < 500) CurrentSpeed = 16;
+   else if (x > 500 && x < 600) CurrentSpeed = 32;
+   else if (x > 600 && x < 700) CurrentSpeed = 64;
+   else if (x > 701 && x < 800) CurrentSpeed = 128;
+   else if (x > 701 ) CurrentSpeed = x / 4;
+   else CurrentSpeed = 1; 
+#endif
 
- // CurrentSpeed = analogRead(mode_pin)/5+1;
-
- CurrentSpeed =  int (exp( analogRead(mode_pin)/180.0)+ 0.5);
+#if defined(__AVR_ATmega328P__)
+  CurrentSpeed =  int (exp( analogRead(mode_pin) / 180.0) + 0.5);
+#endif
  
 #ifdef OLED_DISPLAY_ON
-  //  CurrentDisp = CurrentStep * StepsPerMicrometer / 5 ;
-  CurrentDisp = CurrentStep ;
+    CurrentDisp = CurrentStep ;
   if  ( LastDisp !=  CurrentDisp  || LastSpeed != CurrentSpeed ) {
     LastDisp  = CurrentDisp;
     LastSpeed = CurrentSpeed;
     OledDisp.firstPage();
     do {
       OledDisp.setFont(u8g_font_unifont);
-      OledDisp.setPrintPos(10, 10);
-      if (NowMode == 2 ) {
+#ifdef ONSTEP_ON
+  OledDisp.setPrintPos(10, 10);
+ if (NowMode == 2 ) {
         OledDisp.print("OnStep Mode");
       }
-      else if ( NowMode == 1 ) {
+      else 
+
+      if ( NowMode == 1 ) {
         OledDisp.print("Manual Mode");
       }
       else  {
         OledDisp.print("Init Mode");
       }
+#else
+  OledDisp.setPrintPos(10, 10);
+  OledDisp.print("Step :");
+  OledDisp.print(CurrentDisp);
+#endif            
+      OledDisp.setPrintPos(10, 30);
+      OledDisp.print("Micro:");   
+      OledDisp.print(int(CurrentStep/StepsPerMicrometer));
+      OledDisp.setPrintPos(10, 50);
+      OledDisp.print("Speed:");
+      OledDisp.print(CurrentSpeed);
       
-      OledDisp.setPrintPos(1, 30);
-      OledDisp.print("P:");
-      OledDisp.setPrintPos(20, 30);
-      OledDisp.print(CurrentDisp);
-      OledDisp.print("/");
-      OledDisp.print(CurrentDisp*Step_um/1000.);
-      OledDisp.print("mm");
-      if ( NowMode == 1 ) {
-        OledDisp.setPrintPos(1, 50);
-        OledDisp.print("Speed:");
-        OledDisp.setPrintPos(50, 50);
-        OledDisp.print( int( CurrentSpeed/294. *100. + 0.8));
-      }
-    } while ( OledDisp.nextPage() );
+    } while( OledDisp.nextPage());
   }
 #endif
 
 } // End of loop()
-
-
-

@@ -21,7 +21,5 @@
 
 #define BUZZER_ON	   // Buzzer
 
-
-#define StepsPerMicrometer  0.6  // Steps Per Micrometer 
-#define Step_um   1.2258  //  38000 um  is about 31000 steps
+#define StepsPerMicrometer  0.7  // Steps Per Micrometer 
 

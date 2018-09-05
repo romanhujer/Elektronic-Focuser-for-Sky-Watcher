@@ -57,7 +57,10 @@
 #define RIGHT true
 
 boolean led_status = OFF;
+
+#ifndef NEMA_ON
 int step_position = 0;
+#endif
 
 byte NowMode = 1;
 
@@ -66,6 +69,3 @@ byte NowMode = 1;
 #define  NowStandyMode 2
 #define  NowLeftMode   3
 #define  NowRightMode  4
-
-
-

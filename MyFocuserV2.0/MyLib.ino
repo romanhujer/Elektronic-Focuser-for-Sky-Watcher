@@ -41,7 +41,6 @@ boolean left,  right;
 
  left  = !digitalRead(left_mode_pin);
  right = !digitalRead(right_mode_pin);
-
  if ( left && right) {
      NowMode  = 0;
      CurrentStep = 0;
@@ -51,13 +50,14 @@ boolean left,  right;
         MyLedChangeStatus();
         motor_step(LOW);
      }
+     
  }
  else if (left ) {
    LongInit = 0;
    NowMode = 1;
    SpeedTimer -= CurrentSpeed;
    if (SpeedTimer < 1) {
-     SpeedTimer = 290; 
+     SpeedTimer = 256; 
      MyLedChangeStatus();
      motor_step(HIGH);
    } 
@@ -66,7 +66,7 @@ boolean left,  right;
    NowMode = 1;
    SpeedTimer -= CurrentSpeed;
    if (SpeedTimer < 1) {
-     SpeedTimer = 290; 
+     SpeedTimer = 256; 
      MyLedChangeStatus();
      motor_step(LOW);
    } 
@@ -81,6 +81,3 @@ void buzzer( int _long ) {
   noTone(BuzzerPin);
 } //
 #endif
-
-
-
