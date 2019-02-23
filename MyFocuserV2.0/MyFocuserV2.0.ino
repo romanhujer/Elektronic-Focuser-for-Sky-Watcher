@@ -1,3 +1,4 @@
+
 /*
    MyFocuer.ino
 
@@ -47,6 +48,7 @@ TM1637Display LedDisp(LedDispClk, LedDispDio);
 #endif
 
 #ifdef OLED_DISPLAY_ON
+
 #include <U8glib.h>
 U8GLIB_SSD1306_128X64 OledDisp(U8G_I2C_OPT_NONE);
 #endif
