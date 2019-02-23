@@ -21,6 +21,6 @@ Adruino software:
   
 ## Nema17 motor Vesion:
 
-  Wiring diagram and PCB on [EasyEDA](https://easyeda.com/hujer.roman/Focuser-with-NEMA17)
+  Wiring diagram and PCB on [EasyEDA](https://easyeda.com/hujer.roman/Focuser-with-NEMA17) and [EasyEDA](https://easyeda.com/hujer.roman/fouser-handheld-controller)
 
 
