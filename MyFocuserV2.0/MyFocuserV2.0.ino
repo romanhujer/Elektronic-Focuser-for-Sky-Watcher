@@ -78,8 +78,9 @@ void setup() {
   TCCR1A = 0;        // set entire TCCR1A register to 0
   TCCR1B = 0;        // same for TCCR1B
   TCNT1  = 0;        //initialize counter value to 0
-  // set timer count for 1khz increments
-  OCR1A = 1999;      // = (16*10^6) / (1000*8) - 1
+  // set timer count for 2khz increments
+ //OCR1A = 1999;      // = (16*10^6) / (1000*8) - 1
+  OCR1A = 999;      // = (16*10^6) / (2000*8) - 1
   //had to use 16 bit timer1 for this bc 1999>255, but could switch to timers 0 or 2 with larger prescaler
   // turn on CTC mode
   TCCR1B |= (1 << WGM12);
@@ -127,7 +128,8 @@ void loop() {
 #endif
 
 #if defined(__AVR_ATmega328P__)
-  CurrentSpeed =  int (exp( analogRead(mode_pin) / 180.0) + 0.5);
+ CurrentSpeed =  int (exp( analogRead(mode_pin) / 180.0) + 0.5);
+  
 #endif
  
 #ifdef OLED_DISPLAY_ON
