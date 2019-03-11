@@ -80,7 +80,7 @@ void setup() {
   TCNT1  = 0;        //initialize counter value to 0
   // set timer count for 2khz increments
  //OCR1A = 1999;      // = (16*10^6) / (1000*8) - 1
-  OCR1A = 999;      // = (16*10^6) / (2000*8) - 1
+  OCR1A = 499;      // = (16*10^6) / (4000*8) - 1
   //had to use 16 bit timer1 for this bc 1999>255, but could switch to timers 0 or 2 with larger prescaler
   // turn on CTC mode
   TCCR1B |= (1 << WGM12);

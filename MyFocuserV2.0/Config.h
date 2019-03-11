@@ -21,5 +21,4 @@
 
 #define BUZZER_ON	   // Buzzer
 
-#define StepsPerMicrometer  0.7  // Steps Per Micrometer 
-
+#define StepsPerMicrometer  1.7  // Steps Per Micrometer 
