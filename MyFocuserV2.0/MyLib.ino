@@ -79,5 +79,5 @@ void buzzer( int _long ) {
   tone(BuzzerPin, BuzzerTone );
   delay(_long);
   noTone(BuzzerPin);
-} //
+}
 #endif
