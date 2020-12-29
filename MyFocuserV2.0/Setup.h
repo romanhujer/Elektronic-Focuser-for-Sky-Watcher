@@ -22,7 +22,7 @@
 #ifdef ONSTEP_ON
 
 #define step_pin 2  // Interupt from OnStep controll 
-#define dir_pin  9  // Direcition from OnStep controll
+#define dir_pin  3  // Direcition from OnStep controll
 
 #endif
 
@@ -36,7 +36,7 @@
 
 
 
-#define led_pin 3       // Status led pin
+#define led_pin 9       // Status led pin
 #define left_mode_pin 6     // UP Mode button pin 
 #define right_mode_pin 5 // DOWN Mode button pin 
 

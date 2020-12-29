@@ -131,6 +131,9 @@ void loop() {
  CurrentSpeed =  int (exp( analogRead(mode_pin) / 180.0) + 0.5);
   
 #endif
+CurrentSpeed = 64; 
+
+
  
 #ifdef OLED_DISPLAY_ON
     CurrentDisp = CurrentStep ;

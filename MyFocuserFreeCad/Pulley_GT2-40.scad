@@ -23,7 +23,7 @@
 teeth = 40;			// Number of teeth, standard Mendel T5 belt = 8, gives Outside Diameter of 11.88mm
 profile = 12;		// 1=MXL 2=40DP 3=XL 4=H 5=T2.5 6=T5 7=T10 8=AT5 9=HTD_3mm 10=HTD_5mm 11=HTD_8mm 12=GT2_2mm 13=GT2_3mm 14=GT2_5mm
 
-motor_shaft = 4.4;	// NEMA17 motor shaft exact diameter = 5
+motor_shaft = 4.8;	// NEMA17 motor shaft exact diameter = 5
 m3_dia = 3.2;		// 3mm hole diameter
 m3_nut_hex = 1;		// 1 for hex, 0 for square nut
 m3_nut_flats = 5.7;	// normal M3 hex nut exact width = 5.5
@@ -34,12 +34,12 @@ retainer_ht = 1.5;	// height of retainer flange over pulley, standard = 1.5
 idler = 1;			// Belt retainer below teeth, 0 = No, 1 = Yes
 idler_ht = 1.5;		// height of idler flange over pulley, standard = 1.5
 
-pulley_t_ht = 12;	// length of toothed part of pulley, standard = 12
+pulley_t_ht = 8;	// length of toothed part of pulley, standard = 12
 pulley_b_ht = 14;		// pulley base height, standard = 8. Set to same as idler_ht if you want an idler but no pulley.
-pulley_b_dia = 18;	// pulley base diameter, standard = 20
+pulley_b_dia = 20;	// pulley base diameter, standard = 20
 no_of_nuts = 3;		// number of captive nuts required, standard = 1
 nut_angle = 120;		// angle between nuts, standard = 90
-nut_shaft_distance = 1.2;	// distance between inner face of nut and shaft, can be negative.
+nut_shaft_distance = 1.5;	// distance between inner face of nut and shaft, can be negative.
 
 
 //	********************************
