@@ -131,7 +131,7 @@ void loop() {
  CurrentSpeed =  int (exp( analogRead(mode_pin) / 180.0) + 0.5);
   
 #endif
-CurrentSpeed = 64; 
+CurrentSpeed = 50; 
 
 
  

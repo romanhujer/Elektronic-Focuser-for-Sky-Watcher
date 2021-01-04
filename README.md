@@ -17,6 +17,10 @@ Adruino software:
 * BasicOnStepControll  -  Only Dir/Step controll for 28BYJ-48 motor
 * MyFocuserV1.0	       -  First version only Potenciometr control 
 * MyFocuserV1.5	       -  Oled display and +/- button controll
+* MyFocuserV2.0	       -  Oled display and +/- button controll  Nema17  supprot
+
+* MyFocuserV3.0	       -  Adapting New OnFocus driver for  28BYJ-48 motor
+
 
   
 ## Nema17 motor Vesion:
