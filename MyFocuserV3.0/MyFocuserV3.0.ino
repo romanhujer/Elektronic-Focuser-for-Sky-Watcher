@@ -28,6 +28,10 @@
 */
 
 #define Version "2.0"
+#define FirmwareNumber "3.0a2"
+#define FirmwareName   "On-Focus-"
+
+
 
 #include "Config.h"
 #include "Setup.h"
@@ -41,6 +45,8 @@ int LastSpeed = -1;
 int SpeedTimer = 256;
 int LongInit = 0;
 
+#include <EEPROM.h>
+
 
 #ifdef LED_DISPLAY_ON
 #include <TM1637Display.h>  //  https://github.com/avishorp/TM1637
@@ -53,6 +59,60 @@ TM1637Display LedDisp(LedDispClk, LedDispDio);
 U8GLIB_SSD1306_128X64 OledDisp(U8G_I2C_OPT_NONE);
 #endif
 
+// Misc. global variables
+long startPos = 0;                  // where we were
+long targetPos = 0;                 // where we want to be
+long currentPos = 0;                // where we are
+long maxPos = 0;                    // furthest step position allowed
+long thisRate = MaxRate*8;          // current rate
+
+boolean moving = false;             // are we moving?
+boolean invalid_pos_warning=false;  // powered off while moving? 
+boolean focuser_dir_out;            // direction of travel
+boolean driver_off;                 // power state of stepper driver
+
+long lastRun;                       // helps time steps
+
+//  EEPROM addresses/offsets for permanent storage
+long base=100;
+#define EE_key 0        // 4 bytes
+#define EE_base 10      // 4 bytes
+#define EE_target 0     // 4 bytes
+#define EE_current 4    // 4 bytes
+#define EE_max 8        // 4 bytes
+#define EE_moving 12    // 1 byte
+
+  // read the settings
+  long key=EEPROM_readLong(EE_key);
+  if (key!=1930230196) {
+    EEPROM_writeLong(EE_key,1930230196);
+    EEPROM_writeLong(EE_base,100); base=100;
+
+    EEPROM_writeLong(base+EE_target,targetPos);
+    EEPROM_writeLong(base+EE_current,currentPos);
+    EEPROM_writeLong(base+EE_max,maxPos);
+    EEPROM.write(base+EE_moving,(byte)moving);
+  } else {
+    base      =EEPROM_readLong(EE_base);           // only written once per bootup
+    targetPos =EEPROM_readLong(base+EE_target);    // written each time a new position is requested
+    currentPos=EEPROM_readLong(base+EE_current);
+    maxPos    =EEPROM_readLong(base+EE_max);
+    moving    =(boolean)EEPROM.read(base+EE_moving);
+    
+    // move base to the next position, with these rolling writes the EEPROM should be good for >10 million focuser moves
+    base+=1; if (base>1000) base=100; EEPROM_writeLong(EE_base,base);
+    EEPROM_writeLong(base+EE_target,targetPos);
+    EEPROM_writeLong(base+EE_current,currentPos);
+    EEPROM_writeLong(base+EE_max,maxPos);
+    EEPROM.write(base+EE_moving,(byte)moving);
+  }
+
+  // the value of moving serves to validate the last stored position
+  if (moving) invalid_pos_warning=true;
+  
+  // get time
+  lastRun=millis();
+}
 
 void setup() {
 

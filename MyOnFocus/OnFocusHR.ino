@@ -1,10 +1,12 @@
-#if 0
-
 /*
- * Title       OnFocus
- * by          Howard Dutton
+ * Title       MyOnFocus
+ * by          Roman Hujer
+ * on base     OnFocus 
+ * by          Howard Dutton 
  *
  * Copyright (C) 2015 Howard Dutton
+ * Copyright (C) 2021 Roman Hujer
+ * 
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,16 +28,18 @@
  * Date                Version           Comment
  * 06-17-2015          1.0a1             First release
  * 06-24-2015          1.0a2             Added ability to set logic LOW or HIGH for enabling/disabling the stepper driver, pulls microstep mode control lines M1,M2,M3 LOW for full-step mode
+ * 01-04-2021          2.0a              Modify for 28BYJ-48 Motor
+ * 
 */
 
-#define FirmwareNumber "1.0a2"
+#define FirmwareNumber "2.0a"
 #define FirmwareName   "On-Focus"
 
 // --------------------------------------------------------------------------------------------
 // Settings
 #define CHKSUM0_OFF            // checksum, normally not used
  
-#define MICROS_PER_STEP 2.756  // microns (1/1000 of a mm) of focus travel per step
+#define MICROS_PER_STEP 10 // microns (1/1000 of a mm) of focus travel per step
                                // my Meade 8" SCT has about 32tpi on the focuser knob
                                // so... 1/32" per rotation (0.793mm)
                                // 20:1 reduced 24 stepper motor has 480 steps per rotation
@@ -48,7 +52,7 @@
                                // or about 4mm per focuser knob turn, which is about 5/32" (0.156".)
                                // This also works out to about 0.1 thousandths of an inch per step.
  
-#define MaxRate 10             // milliseconds per step (default 10, 0.01 seconds)
+#define MaxRate 1             // milliseconds per step (default 10, 0.01 seconds)
                                // how fast the focus moves... 1440*0.002=2.9 seconds per turn
                                // this is about 18 seconds for one inch of travel
                                // movement starts and stops at 8x slower than this
@@ -58,23 +62,11 @@
 // the module's enable pin should also be wired in to allow the motor to be powered down
 // when not moving.  For this to work properly you must not micro-step the motor (use 1X mode.)
 // I used a Big Easy Driver (A4988,) but a DRV8825, etc. would also work...
-#define foc_sens 2             // detects the focuser zero index (not implemented)
-#define foc_step 3             // connected to stepper driver step pin (required)
-#define foc_dir  4             // connected to stepper driver dir pin  (required)
-#define foc_en   7             // connected to stepper driver enable pin (optional and recommended)
-#define foc_m1   8             // connected to stepper driver M1 pin (pulled LOW)
-#define foc_m2   9             // connected to stepper driver M2 pin (pulled LOW)
-#define foc_m3   10            // connected to stepper driver M3 pin (pulled LOW)
-#define foc_rst  11            // connected to stepper driver reset pin (not implemented)
-#define foc_sl   12            // connected to stepper driver sleep pin (not implemented)
-#define foc_vcc  13            // connected to stepper driver vcc pin (not implemented)
 
-#define en_enabled LOW
-#define en_disabled HIGH
 
-// Refer to the Pololu site and/or the SparkFun website for full wiring information
-// https://www.pololu.com/product/2133
-// https://www.sparkfun.com/products/12859
+#include "Config.h"
+#include "Setup.h"
+
 
 #include <EEPROM.h>
 
@@ -88,7 +80,6 @@ long thisRate = MaxRate*8;          // current rate
 boolean moving = false;             // are we moving?
 boolean invalid_pos_warning=false;  // powered off while moving? 
 boolean focuser_dir_out;            // direction of travel
-boolean driver_off;                 // power state of stepper driver
 
 long lastRun;                       // helps time steps
 
@@ -106,19 +97,12 @@ void setup()
   // start serial port at 9600 bps
   Serial.begin(9600);
 
-  // configure the Arduino ports
-  pinMode(foc_sens,INPUT);
-  pinMode(foc_en,OUTPUT);
-  digitalWrite(foc_en,en_disabled); driver_off=true; // disable driver output
-  pinMode(foc_dir,OUTPUT);
-  digitalWrite(foc_dir,LOW); focuser_dir_out=false;
-  pinMode(foc_step,OUTPUT);
-  digitalWrite(foc_step,LOW);
-
-  pinMode(foc_m1,OUTPUT); digitalWrite(foc_m1,LOW);
-  pinMode(foc_m2,OUTPUT); digitalWrite(foc_m2,LOW);
-  pinMode(foc_m3,OUTPUT); digitalWrite(foc_m3,LOW);
+  pinMode(led_pin,  OUTPUT);
+  pinMode(BuzzerPin, OUTPUT);
   
+  MotorInit();
+  buzzer(200);
+  focuser_dir_out=false;
   // read the settings
   long key=EEPROM_readLong(EE_key);
   if (key!=1930230196) {
@@ -178,40 +162,39 @@ void loop()
 
       // move out
       if (currentPos>targetPos) {
-        if (!focuser_dir_out || driver_off) {
-          digitalWrite(foc_dir,HIGH); focuser_dir_out=true; delay(1);
-          digitalWrite(foc_en,en_enabled); driver_off=false; // enable driver output
+        if (!focuser_dir_out ) {
+          focuser_dir_out=true; delay(1);
+          
         } else {
-          currentPos--;
-          digitalWrite(foc_step,HIGH);
+         currentPos--;
+         motor_step( focuser_dir_out );     
+         MyLedChangeStatus( );
         }
       }
       
       // move in
       if (currentPos<targetPos) {
-        if (focuser_dir_out || driver_off) {
-          digitalWrite(foc_dir,LOW); focuser_dir_out=false; delay(1);
-          digitalWrite(foc_en,en_enabled); driver_off=false; // enable driver output
+        if (focuser_dir_out ) {
+          focuser_dir_out=false; delay(1);
         } else {
           currentPos++;
-          digitalWrite(foc_step,HIGH);
+          motor_step( focuser_dir_out );
+          MyLedChangeStatus( );
+          
         }
       }
   
-      // get ready for next step
-      digitalWrite(foc_step,LOW);
-
     } else {
-      // remember start pos
+       // remember start pos
       startPos=currentPos;
-
+      MyLED ( OFF );
       // record status, not moving
       if (moving) { 
+        buzzer(100);
         moving=false; 
         EEPROM_writeLong(base+EE_target,targetPos);
         EEPROM_writeLong(base+EE_current,currentPos);
         EEPROM.write(base+EE_moving,(byte)moving); 
-        digitalWrite(foc_en,en_disabled); driver_off=true; // disable driver output
       }
 
       // slow movement
@@ -220,4 +203,3 @@ void loop()
     }
   }
 }
-#endif 

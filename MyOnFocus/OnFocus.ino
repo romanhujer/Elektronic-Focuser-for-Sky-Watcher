@@ -1,5 +1,3 @@
-#if 0
-
 /*
  * Title       OnFocus
  * by          Howard Dutton
@@ -220,4 +218,4 @@ void loop()
     }
   }
 }
-#endif 
+
